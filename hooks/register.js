@@ -27,6 +27,10 @@ export function register(on) {
     return result;
   }).catch(($, e, next) => next(e));
 
+  on('turn.complete', async ($, e, next) => {
+    const result = await next(e);    return result;
+  }).catch(($, e, next) => next(e));
+
   on('command.run', { command: 'prompts' }, async ($, e, next) => {
     const refresh = async () => {
       const { value } = await $.state.get({ plugin: 'prompt-library', key: 'view' });
