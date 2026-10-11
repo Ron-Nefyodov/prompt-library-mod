@@ -1,0 +1,6 @@
+{
+  "name": "prompt-library-mod",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "claude plugin test ." }
+}
