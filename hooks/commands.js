@@ -56,6 +56,8 @@ export async function runPromptsCommand(args, io) {
 
   if (command.action === 'export') {
     const path = joinPath(await io.cwd(), EXPORT_FILE);
+    const isTaken = await io.stat(path).then(() => true, () => false);
+    if (isTaken) return { text: `${path} already exists. Move or rename it, then export again.` };
     try {
       await io.write(path, exportJson(list));
     } catch (error) {

@@ -120,6 +120,21 @@ describe('/prompts commands', () => {
     expect(text).toContain(`${CWD}/prompts.json`);
   });
 
+  test('export refuses to overwrite an existing prompts.json', async ($: any, on: any) => {
+    const world = worldOf(on, {}, { [`${CWD}/prompts.json`]: '{"mine":true}' });
+    const { text } = await $.command.run(run('export'));
+    expect(world.writes).toEqual([]);
+    expect(world.files.get(`${CWD}/prompts.json`)).toBe('{"mine":true}');
+    expect(text).toMatch(/already exists/i);
+  });
+
+  test('imported CRLF and control characters are cleaned', async ($: any, on: any) => {
+    const file = JSON.stringify({ prompts: [{ name: 'crlf', text: 'line one\r\nline two\u001b[31m\ttab' }] });
+    const world = worldOf(on, {}, { [`${CWD}/in.json`]: file });
+    await $.command.run(run('import in.json'));
+    expect(prompt(world, 'crlf').text).toBe('line one\nline two[31m\ttab');
+  });
+
   test('import merges good entries, skips bad, resolves relative path', async ($: any, on: any) => {
     const file = JSON.stringify({ prompts: [{ name: 'mine', text: 'Do it' }, { name: 'bad name', text: 'x' }, { name: 'write-tests', text: 'Changed' }] });
     const world = worldOf(on, {}, { [`${CWD}/in.json`]: file });

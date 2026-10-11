@@ -207,3 +207,15 @@ describe('time ago', () => {
     expect(timeAgo(NOW - 2 * 86_400_000, NOW)).toBe('2d ago');
   });
 });
+
+describe('control characters', () => {
+  test('save cleans CRLF and control characters', () => {
+    const list = savePrompt([], 'crlf', 'a\r\nb\x07c', 1);
+    expect(list[0].text).toBe('a\nbc');
+  });
+
+  test('stored rows with control characters are cleaned on load', async () => {
+    const rows = await loadLibrary(memoryStore({ [LIBRARY_KEY]: [{ name: 'old', text: 'x\ry\x1bz', uses: 1 }] }));
+    expect(rows.find((p: any) => p.name === 'old')?.text).toBe('x\nyz');
+  });
+});

@@ -24,15 +24,20 @@ export function isValidName(name) {
   return typeof name === 'string' && NAME_PATTERN.test(name);
 }
 
+// Text elements refuse control characters other than tab and newline.
+function cleanText(text) {
+  return text.replace(/\r\n?/g, '\n').replace(/[\x00-\x08\x0b-\x1f\x7f]/g, '');
+}
+
 function isValidText(text) {
-  return typeof text === 'string' && text.trim().length > 0 && text.length <= MAX_TEXT_CHARS;
+  return typeof text === 'string' && cleanText(text).trim().length > 0 && text.length <= MAX_TEXT_CHARS;
 }
 
 function normalize(row) {
   if (!row || typeof row !== 'object' || !isValidName(row.name) || !isValidText(row.text)) return null;
   return {
     name: row.name,
-    text: row.text,
+    text: cleanText(row.text),
     uses: Number.isInteger(row.uses) && row.uses > 0 ? row.uses : 0,
     lastUsed: typeof row.lastUsed === 'number' ? row.lastUsed : null,
     createdAt: typeof row.createdAt === 'number' ? row.createdAt : 0,
@@ -56,7 +61,7 @@ export function findPrompt(list, name) {
 
 export function savePrompt(list, name, text, now) {
   if (!isValidName(name)) throw new Error(`Bad name "${name}". Use letters, digits, - _ . (max 40, no spaces).`);
-  const trimmed = typeof text === 'string' ? text.trim() : '';
+  const trimmed = typeof text === 'string' ? cleanText(text).trim() : '';
   if (!trimmed) throw new Error('Nothing to save: the prompt text is empty.');
   if (trimmed.length > MAX_TEXT_CHARS) throw new Error(`Prompt too long (max ${MAX_TEXT_CHARS} characters).`);
   const existing = findPrompt(list, name);
@@ -124,7 +129,7 @@ export function parseImport(text) {
     }
     if (byName.has(row.name)) skipped += 1;
     byName.delete(row.name);
-    byName.set(row.name, { name: row.name, text: row.text.trim() });
+    byName.set(row.name, { name: row.name, text: cleanText(row.text).trim() });
   }
   return { entries: [...byName.values()], skipped };
 }
