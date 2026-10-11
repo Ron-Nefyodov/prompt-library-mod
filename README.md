@@ -18,7 +18,7 @@ Comes with 8 starter prompts (review diff, write tests, explain repo, …).
 
 ## Install
 
-    /plugin marketplace add <owner>/prompt-library-mod
+    /plugin marketplace add Ron-Nefyodov/prompt-library-mod
     /plugin install prompt-library@prompt-library
 
 Or try it locally: `claude --plugin-dir .`
