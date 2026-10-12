@@ -23,7 +23,6 @@ Comes with 8 starter prompts (review diff, write tests, explain repo, …).
 
 Or try it locally: `claude --plugin-dir .`
 
-
 ## Develop
 
     npm test            # claude plugin test .
