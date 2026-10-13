@@ -23,12 +23,14 @@ export function register(on) {
           await $.store.set(LAST_PROMPT_KEY, e.text);
         } catch {
         }
-      }    }
+      }
+    }
     return result;
   }).catch(($, e, next) => next(e));
 
   on('turn.complete', async ($, e, next) => {
-    const result = await next(e);    return result;
+    const result = await next(e);
+    return result;
   }).catch(($, e, next) => next(e));
 
   on('command.run', { command: 'prompts' }, async ($, e, next) => {
@@ -128,4 +130,5 @@ export function register(on) {
       return next(e);
     }
   });
+
 }

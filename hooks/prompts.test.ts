@@ -42,7 +42,8 @@ function worldOf(on: any, store: Record<string, unknown> = {}, files: Record<str
   on('ui.open', ($: any, e: any) => { world.opened.push(e); return { value: { isPlaced: true } }; });
   on('ui.close', ($: any, e: any) => { world.closed.push(e.id); return { value: undefined }; });
   on('ui.focus', () => ({ value: {} }));
-  on('ui.copy', ($: any, e: any) => { world.copied.push(e.text); return { value: { isCopied: true } }; });  on('fs.write', ($: any, e: any) => { world.writes.push({ path: e.path, text: e.text }); world.files.set(e.path, e.text); return { value: undefined }; });
+  on('ui.copy', ($: any, e: any) => { world.copied.push(e.text); return { value: { isCopied: true } }; });
+  on('fs.write', ($: any, e: any) => { world.writes.push({ path: e.path, text: e.text }); world.files.set(e.path, e.text); return { value: undefined }; });
   on('fs.stat', ($: any, e: any) => {
     const text = world.files.get(e.path);
     return text === undefined ? { deny: `ENOENT: ${e.path}` } : { value: { kind: 'file', size: text.length, mtimeMs: 0 } };
@@ -67,7 +68,7 @@ describe('start and composer tracking', () => {
     expect(world.commands).toEqual(['prompts']);
   });
 
-  test('a typed prompt is remembered; the typed prompt is remembered', async ($: any, on: any) => {
+  test('a typed prompt is remembered', async ($: any, on: any) => {
     const world = worldOf(on);
     await $.prompt.submit({ text: 'Refactor the parser', wait: false, origin: { kind: 'composer' } });
     expect(world.store.get(LAST_PROMPT_KEY)).toBe('Refactor the parser');
