@@ -2,6 +2,16 @@
 
 Save, search and reuse your best prompts.
 
+## Why
+
+You write the same good prompts again and again: review my diff, write tests
+for this file, explain this repo. This mod keeps them one command away.
+
+- **Fast.** `/prompts`, type to search, press Send. Most used prompts come first.
+- **Templates.** `{{input}}` asks for the file or topic before it sends.
+- **Portable.** Export to JSON, share it with your team, import it on another machine.
+- **Private.** Prompts stay in the mod's local store. No network calls.
+
 ## Use
 
 | Command | What |
