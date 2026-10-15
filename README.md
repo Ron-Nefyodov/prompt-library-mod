@@ -2,6 +2,8 @@
 
 Save, search and reuse your best prompts.
 
+![Prompt library pane: search, preview, then Send, Copy or Delete](assets/demo.gif)
+
 ## Why
 
 You write the same good prompts again and again: review my diff, write tests
